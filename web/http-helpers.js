@@ -10,12 +10,39 @@ exports.headers = {
   'Content-Type': 'text/html'
 };
 
-exports.serveAssets = function(res, asset, callback) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...),
-  // css, or anything that doesn't change often.)
+// exports.serveAssets = function(res, asset, callback) {
+//   // Write some code here that helps serve up your static files!
+//   // (Static files are things like html (yours or archived from others...),
+//   // css, or anything that doesn't change often.)
+//   fs.readFile(asset, 'utf8', callback);
+// };
+exports.serveAssets = function(res, asset) {
+  console.log('respond to ', res.method)
+  fs.readFile(asset, 'utf8', (err, data) => {
+    if (err) {
+      res.writeHead(404);
+      res.end();
+      return;
+    } 
+    // console.log(data)
+    res.writeHead(200, this.headers);
+    res.end(data);
+  });
+
 };
 
+exports.loadingPage = function(res, callback) {
+  let page = `${archive.paths.siteAssets}/loading.html`;
+
+  fs.readFile(page, (error, data) => {
+    if (error) {
+      throw error;
+    }
+    res.writeHead(302, this.headers);
+    res.end(data, 'utf-8'); 
+  });
+
+};
 
 
 // As you progress, keep thinking about what helper functions you can put here!
